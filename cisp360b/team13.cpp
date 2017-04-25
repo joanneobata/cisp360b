@@ -7,19 +7,20 @@
 
 //team13.cpp
 
-#include <iostream>   //cout, cin
-#include <cstdlib>    //srand
-#include <string>     //string
+#include <iostream>  //cout, cin
+#include <cstdlib>   //srand, rand
+#include <string>    //string
 #include <fstream>   //ifstream
 #include <vector>    //vector
 #include <algorithm> //swap 
-//#include <iomanip>
+#include <iomanip>   //setw, setprecision
+
 using namespace std;
 
 //Prototypes
 void inputValue(string, char &);
 void inputStudentID(vector<string>, string);
-void valStudentInstructor(char &);
+void valInput(char &);
 void selSubject(int &);
 void valYesNo(char &);
 void openFiles();
@@ -27,18 +28,18 @@ void openFiles();
 int main()
 {
 	string studentID;
-	int subject;                //Select Subject
+	int subject;  //Select Subject
+	vector<string> studentVector;
 
 	char yesno,   //Select Y for Yes or N for No
 		stuIn;	  //S for Student or I for Instructor 
 
 	inputValue("Are you a student or instructor? Select S for Student or I for Instructor?", stuIn);
-	valStudentInstructor(stuIn);
+	valInput(stuIn);
 
 	if (stuIn == 'S')
 	{
 		do {
-			vector<string> studentVector;
 			inputStudentID(studentVector, studentID);
 			cout << "Do something here - Display current Status - % correct in each area of study" << endl;
 			selSubject(subject);
@@ -88,7 +89,7 @@ void valYesNo(char &answer)
 // Definition of function getChar. This function validates for*
 // an S for Student or I for Instructor answer                *
 //*************************************************************
-void valStudentInstructor(char &answer)
+void valInput(char &answer)
 {
 	do {
 		cout << endl;
@@ -182,8 +183,8 @@ void selSubject(int &choice)
 //*************************************************************
 void openFiles()
 {
-	const int NUM_QUESTIONS = 20;
-	const int NUM_ASKED = 5;
+	const int NUM_QUESTIONS = 50;
+	const int NUM_ASKED = 10;
 
 	ifstream fin("questions.txt");
 	if (!fin)
@@ -203,7 +204,7 @@ void openFiles()
 	while (getline(fin2, tf))
 		answers.push_back(tf);
 
-	srand(time_t(0));
+
 
 	string inp;
 	int count = 0;
@@ -211,14 +212,16 @@ void openFiles()
 	int remaining = NUM_QUESTIONS;
 	double score = 0;
 
+	cout << "\nEnter 'True' or 'False'. Press enter for next question. \n\n";
 	while (count != NUM_ASKED) {
+		srand(time_t(0));
+		//srand((unsigned int)time_t(NULL));
 		cin.ignore(10000, '\n');              // Ignore the newline character in the buffer to prevent an infinite loop.
-											  /* This is how random numbers should be divided into
-											  * 'remaining' buckets, instead of using rand() % remaining.
-											  * Adding 'count' pushes the random number past the range
-											  * of already-used questions and answers.
-											  */
+		
+		// Random numbers divided into 'remaining' buckets, instead of using rand() % remaining.
+		// Adding 'count' pushes the random number past the range of already-used questions and answers
 		r = count + (int)(remaining * rand() / (RAND_MAX + 1.0));
+		//r = rand() % 50;         //Create random number 1 max 50
 
 		/* Ask a question... */
 		cout << questions[r] << endl;
@@ -226,16 +229,13 @@ void openFiles()
 		getline(cin, inp);
 
 		if (inp == answers[r]) {
-			cout << "Correct! Press enter for next question.\n";
+			cout << "Correct!\n";
 			score += 1;
 		}
 		else {
-			cout << "Incorrect. Press enter for next question.\n";
+			cout << "Incorrect.\n";
 		}
-		/* Now we need to swap our used strings out to the beginning
-		* of the array, where they'll never be used again. (The
-		* swap method is a convenient and efficient way to do this.)
-		*/
+
 		questions[r].swap(questions[count]);
 		answers[r].swap(answers[count]);
 		count += 1;
@@ -244,5 +244,5 @@ void openFiles()
 	fin.close();
 	fin2.close();
 	double correct = score / NUM_ASKED;
-	cout << "Your score is " << correct << "." << endl;
+	cout << "\nYour score is " << right << fixed << setprecision(0) << correct *100 << "%.\n\n";
 }
