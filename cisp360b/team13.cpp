@@ -40,8 +40,8 @@ int main()
 	{
 			inputStudentID(studentVector, studentID);
 			selSubject(subject);
-			cout << "Display Test Name: Area of Study, Date, % incorrect" << endl;
-			cout << "Write to Vector Test Name: Area of Study, Date, % incorrect" << endl;
+			cout << "Display StudentID, Area of Study, Date, % correct" << endl;
+			cout << "Write to testResults file: StudentID, Area of Study, Date, % correct" << endl;
 	}
 	else
 	{
