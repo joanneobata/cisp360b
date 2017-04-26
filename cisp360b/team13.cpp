@@ -22,69 +22,34 @@ void inputValue(string, char &);
 void inputStudentID(vector<string>, string);
 void valInput(char &);
 void selSubject(int &);
-void valYesNo(char &);
-void openFiles();
+void selReport(int &);
+void genTest();
 
 int main()
 {
 	string studentID;
-	int subject;  //Select Subject
 	vector<string> studentVector;
+	int subject, report;  
+	char stuIns;	  //S for Student or I for Instructor 
 
-	char yesno,   //Select Y for Yes or N for No
-		stuIn;	  //S for Student or I for Instructor 
+	inputValue("Are you a student or instructor? Select S for Student or I for Instructor?", stuIns);
+	valInput(stuIns);
 
-	inputValue("Are you a student or instructor? Select S for Student or I for Instructor?", stuIn);
-	valInput(stuIn);
-
-	if (stuIn == 'S')
+	if (stuIns == 'S')
 	{
-		do {
-			inputStudentID(studentVector, studentID);
-			cout << "Do something here - Display current Status - % correct in each area of study" << endl;
-			selSubject(subject);
-
-			cout << "Do something here - Grade Test" << endl;
-			cout << "Display Test Name: Area of Study, Date, % incorrect" << endl;
-			inputValue("Would you like to study more questions?", yesno);
-			valYesNo(yesno);
-		} while (yesno == 'Y'); //Continue while Yes
+		inputStudentID(studentVector, studentID);
+		selSubject(subject);
+		cout << "Display StudentID, Area of Study, Date, % correct" << endl;
+		cout << "Write to testResults file: StudentID, Area of Study, Date, % correct" << endl;
 	}
 	else
 	{
-		do {
-			cout << "Do something here - Display report variables: Student ID, Area of Study, Date" << endl;
-			cout << "Do something here - Display sort order options based on selected report variables" << endl;
-			cout << "Do something here - Generate report" << endl;
-			cout << "Do something here - Display report" << endl;
-			inputValue("Would you like to view another report?", yesno);
-			valYesNo(yesno);
-		} while (yesno == 'Y'); //Continue while Yes
+		selReport(report);
 	}
 	system("pause");
 	return 0;
 }
 
-//*************************************************************
-// Definition of function getYesNo.                           *
-// This function validates for a Y for Yes or N for No answer *
-//*************************************************************
-void valYesNo(char &answer)
-{
-	do {
-		cout << endl;
-		//convert lower case to upper case
-		if (answer == 'y') {
-			answer = 'Y';
-		}
-		else if (answer == 'n') {
-			answer = 'N';
-		}
-		if (answer != 'Y' && answer != 'N') {
-			cout << "Please enter Y for yes or N for N: ";
-		}
-	} while (answer != 'Y' && answer != 'N');
-}
 //*************************************************************
 // Definition of function getChar. This function validates for*
 // an S for Student or I for Instructor answer                *
@@ -129,7 +94,7 @@ void inputStudentID(vector<string> v, string id)
 }
 
 //*************************************************************
-// Definition of function createTest.                         *
+// Definition of function selSubject.                         *
 // This function randomly generates a list of 10 questions for*
 // area of study selected                                     *
 //*************************************************************
@@ -159,54 +124,51 @@ void selSubject(int &choice)
 		}
 		if (choice == 1)
 		{
-			openFiles();
+			genTest();
 		}
 		else if (choice == 2)
 		{
-			openFiles();
+			genTest();
 		}
 		else if (choice == 3)
 		{
-			openFiles();
+			genTest();
 		}
 		else if (choice == 4)
 		{
-			openFiles();
+			genTest();
 		}
 
 	} while (choice != 5); //If 5 selected exit program
 }
 
 //*************************************************************
-// Definition of function openFiles. This function opens files*
-// for questions and answers                                  *
+// Definition of function genTest. This function generate a   *
+// test                                                       *
 //*************************************************************
-void openFiles()
+void genTest()
 {
 	const int NUM_QUESTIONS = 50;
 	const int NUM_ASKED = 10;
+	vector<string> questions;
+	vector<string> answers;
+	string line, tf;
 
-	ifstream fin("questions.txt");
-	if (!fin)
+	ifstream fin1("questions.txt");
+	if (!fin1)
 		cout << "Error in opening questions.txt file";
 
-	vector<string> questions;
-	string line;
-	while (getline(fin, line))
+	while (getline(fin1, line))
 		questions.push_back(line);
 
 	ifstream fin2("answers.txt");
 	if (!fin2)
 		cout << "Error in opening answers.txt file";
 
-	vector<string> answers;
-	string tf;
 	while (getline(fin2, tf))
 		answers.push_back(tf);
 
-
-
-	string inp;
+	string input;
 	int count = 0;
 	int r;
 	int remaining = NUM_QUESTIONS;
@@ -220,20 +182,19 @@ void openFiles()
 		
 		// Random numbers divided into 'remaining' buckets, instead of using rand() % remaining.
 		// Adding 'count' pushes the random number past the range of already-used questions and answers
-		r = count + (int)(remaining * rand() / (RAND_MAX + 1.0));
-		//r = rand() % 50;         //Create random number 1 max 50
+		r = count + (int)(remaining * rand() / (RAND_MAX + 1.0));	
+	    //r = rand() % 50;         //Create random number 1 max 50
 
-		/* Ask a question... */
+	  	// Ask a question and get an answer
 		cout << questions[r] << endl;
-		/* Get an answer! */
-		getline(cin, inp);
+		getline(cin, input);
 
-		if (inp == answers[r]) {
-			cout << "Correct!\n";
+		if (input == answers[r]) {
+			cout << "Correct!";
 			score += 1;
 		}
 		else {
-			cout << "Incorrect.\n";
+			cout << "Incorrect.";
 		}
 
 		questions[r].swap(questions[count]);
@@ -241,8 +202,55 @@ void openFiles()
 		count += 1;
 		remaining -= 1;
 	}
-	fin.close();
+	fin1.close();
 	fin2.close();
 	double correct = score / NUM_ASKED;
 	cout << "\nYour score is " << right << fixed << setprecision(0) << correct *100 << "%.\n\n";
+}
+//*************************************************************
+// Definition of function selReport.                          *
+// This function generates a list of reports                  *
+//*************************************************************
+
+void selReport(int &choice)
+{
+	do {
+		cout << "        Report Menu" << endl;
+		cout << "------------------------------" << endl;
+		cout << "1. Report by Student ID - Descending Order - Student ID, Subject, Date, Grade" << endl;
+		cout << "2. Report by Subject - Subject, Date, Average Score" << endl;
+		cout << "3. Report by Date - Descending Order. Date, StudentID, Subject, Grade, " << endl;
+		cout << "4. Report by Subject Scores below 90% - Descending Order. Subject, Scores" << endl;
+		cout << "5. Quit this progam" << endl;
+		cout << "------------------------------" << endl;
+		cout << "Enter your choice (1-5): ";
+		cin >> choice;
+		while (cin.fail()) {                      // If cin fails to receive a value matching the declared data type.
+			cout << "Data Type not permitted.\n"; // Notify the user of error.
+			cin.clear();                          // Clear the error flag within cin.
+			cin.ignore(10000, '\n');              // Ignore the newline character in the buffer to prevent an infinite loop.
+		}
+		while (choice > 5 || choice < 1) //Validate entry for number within 1-5 range
+		{
+			cout << "The valid choices are 1, 2, 3, 4, and 5. Please choose: ";
+			cin >> choice;
+		}
+		if (choice == 1)
+		{
+			cout << "Do Something\n";
+		}
+		else if (choice == 2)
+		{
+			cout << "Do Something\n";
+		}
+		else if (choice == 3)
+		{
+			cout << "Do Something\n";
+		}
+		else if (choice == 4)
+		{
+			cout << "Do Something\n";
+		}
+
+	} while (choice != 5); //If 5 selected exit program
 }

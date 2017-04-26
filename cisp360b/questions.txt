@@ -1,6 +1,5 @@
 1. In C++ 11, you can use smart pointers to dynamically allocate memory and not worry about deleting the memory when you are finished using it. 
-2. To use any of the smart pointers in C++ 11, you must #include the memory header file with the following directive:
-#include <memory>   
+2. To use any of the smart pointers in C++ 11, you must #include the memory header file with the following directive:#include <memory>   
 3. The ampersand (&) is used to dereference a pointer variable in C++. 
 4. A pointer can be used as a function argument, given the function access to the original argument. 
 5. C++ does not perform array bounds checking, making it possible for you to assign a pointer the address of an element out of the boundaries of an array. 
@@ -18,9 +17,7 @@
 17. It is legal to subtract a pointer variable from another pointer variable. 
 18. The expression s->m has the same meaning as (*s).m. 
 19. The expression s->m is meaningful only when s is a pointer to a structure and m is a member of the structure. 
-20. Assuming myValues is an array of int values, and index is an int variable, both of the following statements do the same thing.  
-cout << myValues[index] << endl;  
-cout << *(myValues + index) << endl; 
+20. Assuming myValues is an array of int values, and index is an int variable, both of the following statements do the same thing.  cout << myValues[index] << endl;  cout << *(myValues + index) << endl; 
 21. C++ does not perform array bounds checking, making it possible for you to assign a pointer the address of an element out of the boundaries of an array. 
 22. It is legal to subtract a pointer variable from another pointer variable. 
 23. With pointer variables you can access, but you cannot modify, data in other variables. 
