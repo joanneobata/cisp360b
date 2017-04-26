@@ -30,18 +30,17 @@ int main()
 	string studentID;
 	vector<string> studentVector;
 	int subject, report;  
-	char yesno,   //Select Y for Yes or N for No
-	  stuIns;	  //S for Student or I for Instructor 
+	char stuIns;	  //S for Student or I for Instructor 
 
 	inputValue("Are you a student or instructor? Select S for Student or I for Instructor?", stuIns);
 	valInput(stuIns);
 
 	if (stuIns == 'S')
 	{
-			inputStudentID(studentVector, studentID);
-			selSubject(subject);
-			cout << "Display StudentID, Area of Study, Date, % correct" << endl;
-			cout << "Write to testResults file: StudentID, Area of Study, Date, % correct" << endl;
+		inputStudentID(studentVector, studentID);
+		selSubject(subject);
+		cout << "Display StudentID, Area of Study, Date, % correct" << endl;
+		cout << "Write to testResults file: StudentID, Area of Study, Date, % correct" << endl;
 	}
 	else
 	{
@@ -51,26 +50,6 @@ int main()
 	return 0;
 }
 
-//*************************************************************
-// Definition of function getYesNo.                           *
-// This function validates for a Y for Yes or N for No answer *
-//*************************************************************
-void valYesNo(char &answer)
-{
-	do {
-		cout << endl;
-		//convert lower case to upper case
-		if (answer == 'y') {
-			answer = 'Y';
-		}
-		else if (answer == 'n') {
-			answer = 'N';
-		}
-		if (answer != 'Y' && answer != 'N') {
-			cout << "Please enter Y for yes or N for N: ";
-		}
-	} while (answer != 'Y' && answer != 'N');
-}
 //*************************************************************
 // Definition of function getChar. This function validates for*
 // an S for Student or I for Instructor answer                *
@@ -115,7 +94,7 @@ void inputStudentID(vector<string> v, string id)
 }
 
 //*************************************************************
-// Definition of function createTest.                         *
+// Definition of function selSubject.                         *
 // This function randomly generates a list of 10 questions for*
 // area of study selected                                     *
 //*************************************************************
@@ -171,13 +150,14 @@ void genTest()
 {
 	const int NUM_QUESTIONS = 50;
 	const int NUM_ASKED = 10;
+	vector<string> questions;
+	vector<string> answers;
+	string line, tf;
 
 	ifstream fin1("questions.txt");
 	if (!fin1)
 		cout << "Error in opening questions.txt file";
 
-	vector<string> questions;
-	string line;
 	while (getline(fin1, line))
 		questions.push_back(line);
 
@@ -185,12 +165,10 @@ void genTest()
 	if (!fin2)
 		cout << "Error in opening answers.txt file";
 
-	vector<string> answers;
-	string tf;
 	while (getline(fin2, tf))
 		answers.push_back(tf);
 
-	string inp;
+	string input;
 	int count = 0;
 	int r;
 	int remaining = NUM_QUESTIONS;
@@ -209,14 +187,14 @@ void genTest()
 
 	  	// Ask a question and get an answer
 		cout << questions[r] << endl;
-		getline(cin, inp);
+		getline(cin, input);
 
-		if (inp == answers[r]) {
-			cout << "Correct!\n";
+		if (input == answers[r]) {
+			cout << "Correct!";
 			score += 1;
 		}
 		else {
-			cout << "Incorrect.\n";
+			cout << "Incorrect.";
 		}
 
 		questions[r].swap(questions[count]);
